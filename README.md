@@ -2,7 +2,8 @@
 
 A Claude skill for explaining complex AI and ML concepts in accessible, plain English. This skill transforms abstract technical ideas into clear explanations using structured narrative frameworks, making it ideal for teaching and learning technical topics.
 
-YouTube Explainer: https://youtu.be/vEvytl7wrGM
+Resources:
+- [YouTube Explainer](https://youtu.be/vEvytl7wrGM)
 
 ## Requirements
 
