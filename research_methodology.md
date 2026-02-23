@@ -80,15 +80,29 @@ Use this guide when you encounter concepts outside your reliable knowledge or wh
 - Overly simplified analogies that mislead
 - Cherry-picked benchmarks or examples
 
-### 4. Extract from YouTube Videos
+### 4. Extract from Video Sources
 
-**When to use YouTube transcripts:**
-- User directly references a video
+**When to use video transcripts:**
+- User directly references a video (local file, Google Drive link, or YouTube link)
 - Video is from reputable educator/researcher
 - Need concrete examples from tutorial content
 - Want to see how concept is explained to learners
 
-**Extracting from transcripts:**
+**Local video/audio files** (transcribed via Whisper):
+```bash
+uv run scripts/get_local_video_transcript.py video.mp4
+uv run scripts/get_local_video_transcript.py video.mp4 --timestamps
+uv run scripts/get_local_video_transcript.py video.mp4 --model small
+```
+
+**Google Drive videos** (downloaded and transcribed via Whisper):
+```bash
+uv run scripts/get_gdrive_video_transcript.py "https://drive.google.com/file/d/FILE_ID/view?usp=sharing"
+uv run scripts/get_gdrive_video_transcript.py "https://drive.google.com/file/d/FILE_ID/view?usp=sharing" --timestamps
+uv run scripts/get_gdrive_video_transcript.py "https://drive.google.com/file/d/FILE_ID/view?usp=sharing" --model small
+```
+
+**YouTube videos:**
 ```bash
 # Basic usage - returns full transcript
 uv run scripts/get_youtube_transcript.py <video_url_or_id>
@@ -97,10 +111,12 @@ uv run scripts/get_youtube_transcript.py <video_url_or_id>
 uv run scripts/get_youtube_transcript.py <video_url_or_id> --timestamps
 
 # Supports multiple URL formats
-uv run scripts/get_youtube_transcript.py dQw4w9WgXcQ
-uv run scripts/get_youtube_transcript.py https://www.youtube.com/watch?v=dQw4w9WgXcQ
-uv run scripts/get_youtube_transcript.py https://youtu.be/dQw4w9WgXcQ
+uv run scripts/get_youtube_transcript.py RN5OMMfNjys
+uv run scripts/get_youtube_transcript.py https://www.youtube.com/watch?v=RN5OMMfNjys
+uv run scripts/get_youtube_transcript.py https://youtu.be/RN5OMMfNjys
 ```
+
+**Whisper model sizes** (for local and Google Drive scripts): `tiny`, `base` (default), `small`, `medium`, `large`. Larger models are more accurate but slower.
 
 **What to look for in transcripts:**
 - The educator's own analogies (often well-tested)
@@ -113,6 +129,7 @@ uv run scripts/get_youtube_transcript.py https://youtu.be/dQw4w9WgXcQ
 - May include verbal fillers and repetition
 - Missing visual context (slides, diagrams)
 - Informal language may need translation to written form
+- Whisper transcripts (local/Google Drive) may have minor inaccuracies depending on audio quality and model size
 
 ## Source Quality Hierarchy
 

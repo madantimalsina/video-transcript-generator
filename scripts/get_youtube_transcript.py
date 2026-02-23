@@ -85,9 +85,9 @@ def main():
     if len(sys.argv) < 2:
         print("Usage: python get_youtube_transcript.py <video_url_or_id> [--timestamps]")
         print("\nExamples:")
-        print("  uv run get_youtube_transcript.py dQw4w9WgXcQ")
-        print("  uv run get_youtube_transcript.py https://www.youtube.com/watch?v=dQw4w9WgXcQ")
-        print("  uv run get_youtube_transcript.py dQw4w9WgXcQ --timestamps")
+        print("  uv run get_youtube_transcript.py RN5OMMfNjys")
+        print("  uv run get_youtube_transcript.py https://www.youtube.com/watch?v=RN5OMMfNjys")
+        print("  uv run get_youtube_transcript.py RN5OMMfNjys --timestamps")
         sys.exit(1)
     
     url_or_id = sys.argv[1]

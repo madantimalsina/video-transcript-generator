@@ -1,9 +1,26 @@
 [project]
 name = "ai-tutor"
 version = "0.1.0"
-description = "Add your description here"
+description = "A Claude Code skill that explains AI/ML concepts in plain English using narrative frameworks"
 readme = "README.md"
 requires-python = ">=3.12"
+
+# License metadata
+license = { text = "Apache-2.0" }
+
 dependencies = [
+    # OpenAI Whisper — speech-to-text for local and Google Drive videos
+    "openai-whisper>=20240930",
+
+    # Downloads files from Google Drive sharing links
+    "gdown>=5.2.0",
+
+    # Fetches existing captions from YouTube videos
     "youtube-transcript-api>=1.2.3",
 ]
+
+[project.scripts]
+# Shorthand entry points so scripts can also be run via `uv run <name>`
+local-transcript = "scripts.get_local_video_transcript:main"
+gdrive-transcript = "scripts.get_gdrive_video_transcript:main"
+youtube-transcript = "scripts.get_youtube_transcript:main"
