@@ -8,7 +8,6 @@ Resources:
 ## Prerequisites
 
 - **Python** 3.12 or newer
-- **[uv](https://github.com/astral-sh/uv)** for dependency and script management
 - All Python packages (openai-whisper, gdown, youtube-transcript-api) are installed automatically on first run
 
 ## Getting Started
@@ -23,44 +22,98 @@ uv sync
 
 ## Transcript Tools
 
-Three helper scripts pull text from different video sources so the tutor skill can work with video content.
+Three scripts pull transcripts from different video sources. Each script has configuration variables at the top — just replace the URL/path and run.
 
-### Local Video / Audio
+---
 
-Runs a local file through OpenAI's Whisper model to generate a transcript on your machine.
+### `get_local_video_transcript.py`
 
-```bash
-uv run scripts/get_local_video_transcript.py recording.mp4
-uv run scripts/get_local_video_transcript.py recording.mp4 --timestamps
-uv run scripts/get_local_video_transcript.py recording.mp4 --model small
+Transcribes a local video or audio file using OpenAI's Whisper model.
+
+**How it works:**
+1. Reads the file path from `VIDEO_PATH` at the top of the script
+2. Loads the Whisper model (size set by `MODEL`)
+3. Runs the audio through Whisper to generate a transcript
+4. Prints plain text, or timestamped lines if `TIMESTAMPS = True`
+
+**Configuration:**
+```python
+VIDEO_PATH = "/path/to/your.mp4"
+MODEL = "base"            # tiny, base, small, medium, large
+TIMESTAMPS = False
 ```
 
-### Google Drive Video
-
-Downloads a video from a public Google Drive sharing link, then transcribes it with Whisper. The temporary file is cleaned up automatically after transcription.
-
+**Run:**
 ```bash
-uv run scripts/get_gdrive_video_transcript.py "https://drive.google.com/file/d/FILE_ID/view?usp=sharing"
-uv run scripts/get_gdrive_video_transcript.py "https://drive.google.com/file/d/FILE_ID/view?usp=sharing" --timestamps
-uv run scripts/get_gdrive_video_transcript.py "https://drive.google.com/file/d/FILE_ID/view?usp=sharing" --model small
+uv run scripts/get_local_video_transcript.py
 ```
 
-### YouTube
+---
 
-Retrieves existing captions from YouTube using the Transcript API.
+### `get_gdrive_video_transcript.py`
 
-```bash
-uv run scripts/get_youtube_transcript.py "https://www.youtube.com/watch?v=VIDEO_ID"
-uv run scripts/get_youtube_transcript.py "https://youtu.be/VIDEO_ID" --timestamps
+Downloads a video from a public Google Drive link and transcribes it with Whisper.
+
+**How it works:**
+1. Extracts the file ID from the Google Drive URL in `GDRIVE_LINK`
+2. Downloads the video to a temporary directory using `gdown`
+3. Loads the Whisper model and transcribes the downloaded file
+4. Prints the transcript (plain text or with timestamps)
+5. Cleans up the temporary file automatically
+
+**Configuration:**
+```python
+GDRIVE_LINK = "https://drive.google.com/file/d/FILE_ID/view?usp=sharing"
+MODEL = "base"            # tiny, base, small, medium, large
+TIMESTAMPS = False
 ```
 
-> **Heads up:** YouTube blocks requests that originate from cloud servers. Run Claude Code on your local machine for this script to work.
+**Run:**
+```bash
+uv run scripts/get_gdrive_video_transcript.py
+```
+
+> The Google Drive link must be publicly shared for the download to work.
+
+---
+
+### `get_youtube_transcript.py`
+
+Retrieves existing captions from YouTube using the YouTube Transcript API (no Whisper needed).
+
+**How it works:**
+1. Extracts the video ID from the YouTube URL in `YOUTUBE_URL`
+2. Fetches the available English captions via the YouTube Transcript API
+3. Prints the transcript (plain text or with timestamps)
+
+**Configuration:**
+```python
+YOUTUBE_URL = "https://www.youtube.com/watch?v=RN5OMMfNjys"
+TIMESTAMPS = False
+```
+
+**Run:**
+```bash
+uv run scripts/get_youtube_transcript.py
+```
+
+---
 
 ### Whisper Model Sizes
 
-The `--model` flag (used by the local and Google Drive scripts) accepts: `tiny`, `base` (default), `small`, `medium`, `large`. Bigger models produce more accurate transcripts but take longer to run.
+The local and Google Drive scripts use Whisper for transcription. Available models:
+
+| Model | Speed | Accuracy |
+|-------|-------|----------|
+| `tiny` | Fastest | Lowest |
+| `base` | Fast | Good (default) |
+| `small` | Moderate | Better |
+| `medium` | Slow | High |
+| `large` | Slowest | Highest |
 
 ## Note on `uv.lock`
+
+- **[uv](https://github.com/astral-sh/uv)** for dependency and script management
 
 The `uv.lock` file pins every dependency (and their sub-dependencies) to exact versions. This guarantees that anyone cloning the repo gets an identical environment. The transcript scripts will still work without it — uv resolves dependencies on the fly — but keeping it checked in ensures reproducible builds across machines.
 

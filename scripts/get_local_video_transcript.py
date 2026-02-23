@@ -9,85 +9,33 @@ import sys
 import os
 import whisper
 
+# ============================================================
+# REPLACE THIS PATH with your local video/audio file
+# ============================================================
+VIDEO_PATH = "/path/to/your.mp4"
 
-def transcribe_video(file_path, model_name='base', language='en'):
-    """
-    Transcribe a local video or audio file using Whisper.
-
-    Args:
-        file_path: Path to the video/audio file
-        model_name: Whisper model size (tiny, base, small, medium, large)
-        language: Language code (default: 'en')
-
-    Returns:
-        Transcription result dict with 'text' and 'segments'
-    """
-    if not os.path.isfile(file_path):
-        raise FileNotFoundError(f"File not found: {file_path}")
-
-    print(f"Loading Whisper '{model_name}' model...", file=sys.stderr)
-    model = whisper.load_model(model_name)
-
-    print(f"Transcribing: {file_path}", file=sys.stderr)
-    result = model.transcribe(file_path, language=language)
-    return result
-
-
-def format_transcript(result, include_timestamps=False):
-    """
-    Format transcription result into readable text.
-
-    Args:
-        result: Whisper transcription result
-        include_timestamps: Whether to include timestamps
-
-    Returns:
-        Formatted transcript text
-    """
-    if include_timestamps:
-        formatted = []
-        for segment in result['segments']:
-            start = segment['start']
-            minutes = int(start // 60)
-            seconds = int(start % 60)
-            formatted.append(f"[{minutes}:{seconds:02d}] {segment['text'].strip()}")
-        return '\n'.join(formatted)
-    else:
-        return result['text'].strip()
+MODEL = "base"            # Whisper model: tiny, base, small, medium, large
+TIMESTAMPS = False         # Set to True to include timestamps
 
 
 def main():
-    """Main execution function"""
-    if len(sys.argv) < 2:
-        print("Usage: python get_local_video_transcript.py <video_path> [--timestamps] [--model MODEL]")
-        print("\nModels: tiny, base (default), small, medium, large")
-        print("\nExamples:")
-        print("  uv run get_local_video_transcript.py DUNE_Profiling.mp4")
-        print("  uv run get_local_video_transcript.py DUNE_Profiling.mp4 --timestamps")
-        print("  uv run get_local_video_transcript.py DUNE_Profiling.mp4 --model small")
+    if not os.path.isfile(VIDEO_PATH):
+        print(f"Error: File not found: {VIDEO_PATH}", file=sys.stderr)
         sys.exit(1)
 
-    file_path = sys.argv[1]
-    include_timestamps = '--timestamps' in sys.argv
+    # Transcribe
+    print(f"Loading Whisper '{MODEL}' model...", file=sys.stderr)
+    model = whisper.load_model(MODEL)
+    print(f"Transcribing: {VIDEO_PATH}", file=sys.stderr)
+    result = model.transcribe(VIDEO_PATH, language="en")
 
-    # Parse model name
-    model_name = 'base'
-    if '--model' in sys.argv:
-        model_idx = sys.argv.index('--model')
-        if model_idx + 1 < len(sys.argv):
-            model_name = sys.argv[model_idx + 1]
-
-    try:
-        result = transcribe_video(file_path, model_name=model_name)
-        formatted_text = format_transcript(result, include_timestamps)
-        print(formatted_text)
-
-    except FileNotFoundError as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
-    except Exception as e:
-        print(f"Error: {str(e)}", file=sys.stderr)
-        sys.exit(1)
+    # Format output
+    if TIMESTAMPS:
+        for seg in result['segments']:
+            m, s = int(seg['start'] // 60), int(seg['start'] % 60)
+            print(f"[{m}:{s:02d}] {seg['text'].strip()}")
+    else:
+        print(result['text'].strip())
 
 
 if __name__ == "__main__":
