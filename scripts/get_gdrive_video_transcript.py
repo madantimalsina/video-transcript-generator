@@ -15,7 +15,7 @@ import whisper
 # ============================================================
 # REPLACE THIS LINK with your Google Drive video sharing URL
 # ============================================================
-GDRIVE_LINK = "https://drive.google.com/file/d/1qM29M4g7IqRj-ZBxWlknTDH12o1UTLd-/view?usp=sharing"
+GDRIVE_LINK = "your_google_drive_shareable_link"
 
 MODEL = "base"            # Whisper model: tiny, base, small, medium, large
 TIMESTAMPS = False         # Set to True to include timestamps
