@@ -8,17 +8,43 @@ Resources:
 ## Prerequisites
 
 - **Python** 3.12 or newer
-- All Python packages (openai-whisper, gdown, youtube-transcript-api) are installed automatically on first run
+- **[uv](https://github.com/astral-sh/uv)** — Python package and project manager
+- **FFmpeg** — required by Whisper for audio processing (not needed for YouTube-only usage)
+
+### Install uv
+
+```bash
+# Mac
+brew install uv
+
+# Or on any platform
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+### Install FFmpeg
+
+```bash
+# Mac
+brew install ffmpeg
+
+# Ubuntu / Debian
+sudo apt install ffmpeg
+
+# Windows
+winget install ffmpeg
+```
+
+> **Note:** If you only need YouTube transcripts, you can skip FFmpeg — that script fetches existing captions and doesn't use Whisper.
 
 ## Getting Started
-
-Clone the repo and install dependencies:
 
 ```bash
 git clone https://github.com/madantimalsina/video-transcript-generator.git
 cd video-transcript-generator
 uv sync
 ```
+
+No need to manually create or activate a virtual environment. `uv sync` automatically creates a `.venv` in the project directory and installs all dependencies. When you run scripts with `uv run`, they execute inside that environment automatically.
 
 ## Transcript Tools
 

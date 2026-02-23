@@ -1,0 +1,25 @@
+DUNE Profiling Session - Summary
+
+This is a recorded walkthrough of GPU memory profiling on NERSC's Perlmutter supercomputer
+using NVIDIA Nsight Systems (Nsys) for the LArND-Sim (Liquid Argon Near Detector Simulation).
+
+Key Steps:
+1. Cloned the larnd-sim example repo and ran the install script on Perlmutter
+2. Set environment variables:
+   - LARND_SIM_PROFILER=nsys (enables NVIDIA Nsight Systems profiling)
+   - LARND_SIM_DISABLE_CUPAIMEMPOOL=1 (disables memory pooling for clearer profiling)
+3. Requested a 40GB GPU node and ran the simulation with 10 events
+4. Generated an Nsys profiling report and opened it in NVIDIA's GUI tool
+
+Profiling Findings:
+- Identified GPU memory spikes by examining the memory usage timeline
+- Used Python backtraces in Nsys to trace allocations to specific lines in simulate_pixels.py
+- Found that a lookup table (for the light simulation) was being unnecessarily recopied
+  to the GPU for modules 2 and 3, when it only needed to be loaded once for modules 1-3
+- Demonstrated how to correlate CUDA malloc calls with Python source lines to find
+  oversized or redundant array allocations
+
+Key Takeaway:
+Running the simulation without the CUDA memory pool and using Nsys profiling allows you to
+see individual memory allocations, trace them back to Python source code, and identify
+opportunities to reduce GPU memory usage.
