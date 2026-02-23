@@ -12,7 +12,7 @@ import whisper
 # ============================================================
 # REPLACE THIS PATH with your local video/audio file
 # ============================================================
-VIDEO_PATH = "/Users/madan12/Desktop/vibe-coding/video-transcript-generator/DUNE_Profiling.mp4"
+VIDEO_PATH = "/path/to/your.mp4"
 
 MODEL = "base"            # Whisper model: tiny, base, small, medium, large
 TIMESTAMPS = False         # Set to True to include timestamps
