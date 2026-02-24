@@ -2,9 +2,6 @@
 
 A Claude Code skill that breaks down technical concepts — particularly in AI and ML — into clear, jargon-free explanations. It uses structured narrative frameworks to make dense ideas approachable, whether you are learning or teaching.
 
-Resources:
-- [YouTube Explainer](https://www.youtube.com/watch?v=RN5OMMfNjys)
-
 ## Prerequisites
 
 - **Python** 3.12 or newer
